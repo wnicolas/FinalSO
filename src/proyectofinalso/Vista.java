@@ -13,7 +13,9 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
     int tiempo = 0;
 
+    Cola1 cola1;
     Cola2 cola2;
+    Cola3 cola3;
 
     JButton btnIniciar;
     JButton btnAñadir;
@@ -50,7 +52,9 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
     public Vista() {
 
+        cola1 = new Cola1();
         cola2 = new Cola2();
+        cola3 = new Cola3();
 
         setTitle("Proyecto final");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -186,6 +190,18 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         switch (cmbColas.getSelectedIndex()) {
             case 0:
                 System.out.println("RR");
+                
+                
+                int rafaga1 = Integer.parseInt(txtProcesosInicio.getText());
+                
+                Nodo nuevo5=new Nodo(tiempo, rafaga1, 0);
+
+                
+                cola2.insertarNodo(nuevo5);
+                
+                cola2.mostrarLista();
+                
+                
                 txtPrioridad.setEnabled(false);
                 break;
             case 1:
@@ -233,6 +249,9 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 break;
             case 2:
                 System.out.println("LP");
+                
+                
+                
                 txtPrioridad.setEnabled(true);
                 break;
             default:

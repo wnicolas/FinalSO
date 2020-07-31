@@ -10,7 +10,7 @@ public class Cola2 {
         this.fin = null;
     }
     
-    public void insertarNodo(Nodo nuevo) {//MÉTODO QUE INGRESA LOS NUEVOS NODOS A LA LISTA DE MANERA ORDENADA.
+    public void insertarNodo(Nodo nuevo) {//MÉTODO QUE INGRESA LOS NUEVOS NODOS A LA LISTA DE MANERA ORDENADA POR RÁFAGA.
         if (this.inicio == this.fin && this.inicio == null) {
             this.inicio = nuevo;
             this.fin = nuevo;

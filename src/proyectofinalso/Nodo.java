@@ -8,30 +8,32 @@ public class Nodo {
     private int rafagaTotal;
     private int rafagaEjecutada;
     private int rafagaRestante;
-    
+
+    private int prioridad;
+
     private Nodo siguiente;
     private Nodo anterior;
 
     public Nodo(int tiempoLlegada, int rafagaTotal, int rafagaEjecutada) {
         CONTADOR++;
-        this.idProceso=CONTADOR;
-        this.tiempoLlegada=tiempoLlegada;
-        this.rafagaTotal=rafagaTotal;
-        this.rafagaEjecutada=rafagaEjecutada;
-        this.rafagaRestante=this.rafagaTotal-this.rafagaEjecutada;
-        
-        this.siguiente=null;
-        this.anterior=null;
+        this.idProceso = CONTADOR;
+        this.tiempoLlegada = tiempoLlegada;
+        this.rafagaTotal = rafagaTotal;
+        this.rafagaEjecutada = rafagaEjecutada;
+        this.rafagaRestante = this.rafagaTotal - this.rafagaEjecutada;
+
+        this.siguiente = null;
+        this.anterior = null;
     }
-    
-    public Nodo(int idProceso, int rafagaRestante){
-        this.idProceso=idProceso;
-        this.rafagaRestante=rafagaRestante;
-        
+
+    public Nodo(int idProceso, int rafagaRestante) {
+        this.idProceso = idProceso;
+        this.rafagaRestante = rafagaRestante;
+
     }
-    
-    public void calcularRafagaRestante(){
-        this.rafagaRestante=this.rafagaTotal-this.rafagaEjecutada;
+
+    public void calcularRafagaRestante() {
+        this.rafagaRestante = this.rafagaTotal - this.rafagaEjecutada;
     }
 
     public Nodo getSiguiente() {
@@ -49,7 +51,7 @@ public class Nodo {
     public void setAnterior(Nodo anterior) {
         this.anterior = anterior;
     }
-    
+
     public int getIdProceso() {
         return idProceso;
     }
@@ -72,6 +74,14 @@ public class Nodo {
 
     public void setRafagaEjecutada(int rafagaEjecutada) {
         this.rafagaEjecutada = rafagaEjecutada;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
     }
 
 }
