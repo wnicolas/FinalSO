@@ -1,3 +1,4 @@
+//LISTA DE PRIORIDADES
 package proyectofinalso;
 
 public class Cola3 {

@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 public class Vista extends JFrame implements ActionListener, Runnable {
 
     int tiempo = 0;
+    final int CUANTUM = 5;
+    final int TIEMPOENVEJECIMIENTO = 10;
 
     Cola1 cola1;
     Cola2 cola2;
@@ -187,75 +189,55 @@ public class Vista extends JFrame implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        switch (cmbColas.getSelectedIndex()) {
-            case 0:
-                System.out.println("RR");
-                
-                
-                int rafaga1 = Integer.parseInt(txtProcesosInicio.getText());
-                
-                Nodo nuevo5=new Nodo(tiempo, rafaga1, 0);
+        if (e.getSource() == btnAñadir) {
 
-                
-                cola2.insertarNodo(nuevo5);
-                
-                cola2.mostrarLista();
-                
-                
-                txtPrioridad.setEnabled(false);
-                break;
-            case 1:
-                System.out.println("SRTF");
-                txtPrioridad.setEnabled(false);
+            switch (cmbColas.getSelectedIndex()) {
+                case 0:
+                    System.out.println("RR");
+                    break;
+                case 1:
+                    System.out.println("SRTF");
+                    break;
+                case 2:
+                    System.out.println("LP");
+                    break;
+                default:
+                    break;
+            }
 
-                if (e.getSource() == btnAñadir) {
-
-                    int rafaga = Integer.parseInt(txtProcesosInicio.getText());
-                    Nodo nuevo = new Nodo(tiempo, rafaga, 0);
-
-                    Object p[] = {nuevo.getIdProceso(), tiempo, nuevo.getRafagaRestante()};
-                    modeloC.addRow(p);
-
-                    cola2.insertarNodo(nuevo);
-
-                    Object r[] = {};
-                    modeloG.addRow(r);
-
-                    if (modeloSC.getRowCount() > 0) {
-                        if (cola2.getInicio().getRafagaRestante() < (int) modeloSC.getValueAt(0, 2)) {
-
-                            int idProceso = (int) modeloSC.getValueAt(0, 0);
-                            int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
-                            Nodo nuevo1 = new Nodo(idProceso, rafagaRestante);
-                            Object q[] = {nuevo1.getIdProceso(), tiempo, nuevo1.getRafagaRestante()};
-                            cola2.insertarNodo(nuevo1);
-
-                            actualizaC();
-                            modeloSC.removeRow(0);
-                            entraSC();
-
-                            modeloC.addRow(q);
-
-                        }
-                    }
-
-                } else if (e.getSource() == btnIniciar) {
-                    hilo.start();
-                    entraSC();
-                } else if (e.getSource() == btnBloquear) {
-                    bloquear();
-                }
-
-                break;
-            case 2:
-                System.out.println("LP");
-                
-                
-                
-                txtPrioridad.setEnabled(true);
-                break;
-            default:
-                break;
+//            int rafaga = Integer.parseInt(txtProcesosInicio.getText());
+//            Nodo nuevo = new Nodo(tiempo, rafaga, 0);
+//
+//            Object p[] = {nuevo.getIdProceso(), tiempo, nuevo.getRafagaRestante()};
+//            modeloC.addRow(p);
+//
+//            cola2.insertarNodo(nuevo);
+//
+//            Object r[] = {};
+//            modeloG.addRow(r);
+//
+//            if (modeloSC.getRowCount() > 0) {
+//                if (cola2.getInicio().getRafagaRestante() < (int) modeloSC.getValueAt(0, 2)) {
+//
+//                    int idProceso = (int) modeloSC.getValueAt(0, 0);
+//                    int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
+//                    Nodo nuevo1 = new Nodo(idProceso, rafagaRestante);
+//                    Object q[] = {nuevo1.getIdProceso(), tiempo, nuevo1.getRafagaRestante()};
+//                    cola2.insertarNodo(nuevo1);
+//
+//                    actualizaC();
+//                    modeloSC.removeRow(0);
+//                    entraSC();
+//
+//                    modeloC.addRow(q);
+//
+//                }
+//            }
+        } else if (e.getSource() == btnIniciar) {
+            hilo.start();
+            entraSC();
+        } else if (e.getSource() == btnBloquear) {
+            bloquear();
         }
 
     }
@@ -391,7 +373,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
                 tiempo++;
                 lblTiempo.setText("tiempo: " + tiempo);
             } catch (InterruptedException ex) {
@@ -412,15 +394,12 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         public void actionPerformed(ActionEvent e) {
             switch (cmbColas.getSelectedIndex()) {
                 case 0:
-                    System.out.println("RR");
                     txtPrioridad.setEnabled(false);
                     break;
                 case 1:
-                    System.out.println("SRTF");
                     txtPrioridad.setEnabled(false);
                     break;
                 case 2:
-                    System.out.println("LP");
                     txtPrioridad.setEnabled(true);
                     break;
                 default:
