@@ -122,7 +122,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         modelo1 = new DefaultTableModel();
         modelo1.addColumn("Proceso");
         modelo1.addColumn("Ráfaga");
-        modelo1.addColumn("T.E");
 
         modelo2 = new DefaultTableModel();
         modelo2.addColumn("Proceso");
@@ -190,16 +189,37 @@ public class Vista extends JFrame implements ActionListener, Runnable {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == btnAñadir) {
+            int rafaga = Integer.parseInt(txtProcesosInicio.getText());
+            Nodo nuevo = new Nodo(tiempo, rafaga, 0);
+
+            Object c[] = {nuevo.getIdProceso(), tiempo, nuevo.getRafagaRestante()};
+            modeloC.addRow(c);
+
+            Object gantt[] = {};
+            modeloG.addRow(gantt);
 
             switch (cmbColas.getSelectedIndex()) {
-                case 0:
-                    System.out.println("RR");
+                case 0://ROUND ROBIN
+                    cola1.insertarNodo(nuevo);
+
+                    Object cola1[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante()};
+                    modelo1.addRow(cola1);
+
                     break;
-                case 1:
-                    System.out.println("SRTF");
+                case 1://SHORTEST REMAINING TIME FIRST
+                    cola2.insertarNodo(nuevo);
+
+                    Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                    modelo2.addRow(cola2);
+
                     break;
-                case 2:
-                    System.out.println("LP");
+                case 2://LISTA DE PRIORIDADES
+                    int prioridad = Integer.parseInt(txtPrioridad.getText());
+                    nuevo.setPrioridad(prioridad);
+                    cola3.insertarNodo(nuevo);
+
+                    Object cola3[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                    modelo3.addRow(cola3);
                     break;
                 default:
                     break;
