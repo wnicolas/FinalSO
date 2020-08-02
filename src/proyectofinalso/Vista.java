@@ -299,14 +299,19 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             }
         } else if (modelo2.getRowCount() > 0) {
             COLA = 2;
-            System.out.println("Entra la cola 2");
 
             if (tiempo == 0) {
                 modeloC.setValueAt(tiempo, cola2.getInicio().getIdProceso(), 3);
                 Object p[] = {cola2.getInicio().getIdProceso(), cola2.getInicio().getRafagaRestante(), cola2.getInicio().getRafagaRestante()};
                 modeloSC.addRow(p);
                 cola2.retirarNodo();
-                //modelo2.removeRow(0);
+
+                for (int i = 0; i < modelo2.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modelo2.getValueAt(i, 0)) {
+                        modelo2.removeRow(i);
+                    }
+                }
+
             } else {
 
                 Object p[] = {cola2.getInicio().getIdProceso(), cola2.getInicio().getRafagaRestante(), cola2.getInicio().getRafagaRestante()};
@@ -322,7 +327,11 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 }
                 modeloC.setValueAt(tiempo, indexFila, 3);
                 cola2.retirarNodo();
-                //modelo2.removeRow(0);
+                for (int i = 0; i < modelo2.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modelo2.getValueAt(i, 0)) {
+                        modelo2.removeRow(i);
+                    }
+                }
             }
 
         } else if (modelo3.getRowCount() > 0) {
@@ -333,7 +342,13 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 Object p[] = {cola3.getInicio().getIdProceso(), cola3.getInicio().getRafagaRestante(), cola3.getInicio().getRafagaRestante()};
                 modeloSC.addRow(p);
                 cola3.retirarNodo();
-                modelo3.removeRow(0);
+
+                for (int i = 0; i < modelo3.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modelo3.getValueAt(i, 0)) {
+                        modelo3.removeRow(i);
+                    }
+                }
+
             } else {
                 Object p[] = {cola3.getInicio().getIdProceso(), cola3.getInicio().getRafagaRestante(), cola3.getInicio().getRafagaRestante()};
                 modeloSC.addRow(p);
@@ -347,7 +362,12 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 }
                 modeloC.setValueAt(tiempo, indexFila, 3);
                 cola3.retirarNodo();
-                modelo3.removeRow(0);
+
+                for (int i = 0; i < modelo3.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modelo3.getValueAt(i, 0)) {
+                        modelo3.removeRow(i);
+                    }
+                }
 
             }
         }
@@ -396,14 +416,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 modeloSC.setValueAt((int) modeloSC.getValueAt(0, 2) - 1, 0, 2);
             }
         }
-
-//        if ((int) modeloSC.getValueAt(0, 2) == 1) {
-//            actualizaC();
-//            modeloSC.removeRow(0);
-//            entraSC();
-//        } else {
-//            modeloSC.setValueAt((int) modeloSC.getValueAt(0, 2) - 1, 0, 2);
-//        }
     }
 
     public void actualizaC() {
@@ -412,26 +424,21 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             if ((int) modeloSC.getValueAt(0, 0) == (int) modeloC.getValueAt(i, 0)) {
                 if (modeloC.getValueAt(i, 4) == null) {
                     indexFila = i;
-                    System.out.println(indexFila);
                     break;
                 }
             }
         }
 
         int tiempoFinal = tiempo;
-//        modeloC.setValueAt(tiempoFinal, (int) modeloSC.getValueAt(0, 0), 4);
+
         modeloC.setValueAt(tiempoFinal, indexFila, 4);
 
-//        int tiempoLlegada = (int) modeloC.getValueAt((int) modeloSC.getValueAt(0, 0), 1);
         int tiempoLlegada = (int) modeloC.getValueAt(indexFila, 1);
         int tiempoRetorno = tiempoFinal - tiempoLlegada;
 
-//        int rafagaEjecutada = (tiempoFinal - (int) modeloC.getValueAt((int) modeloSC.getValueAt(0, 0), 3));
         int rafagaEjecutada = (tiempoFinal - (int) modeloC.getValueAt(indexFila, 3));
         int tiempoEspera = tiempoRetorno - rafagaEjecutada;
 
-//        modeloC.setValueAt(tiempoRetorno, (int) modeloSC.getValueAt(0, 0), 5);
-//        modeloC.setValueAt(tiempoEspera, (int) modeloSC.getValueAt(0, 0), 6);
         modeloC.setValueAt(tiempoRetorno, indexFila, 5);
         modeloC.setValueAt(tiempoEspera, indexFila, 6);
 
