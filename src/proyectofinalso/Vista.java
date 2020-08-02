@@ -215,7 +215,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
                         if (modeloSC.getRowCount() > 0) {
                             if (cola2.getInicio().getRafagaRestante() < (int) modeloSC.getValueAt(0, 2)) {
-                                System.out.println("Entra acá");
                                 int idProceso = (int) modeloSC.getValueAt(0, 0);
                                 int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
                                 Nodo nuevo1 = new Nodo(idProceso, rafagaRestante);
@@ -245,39 +244,12 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
                     Object cola3[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
                     modelo3.addRow(cola3);
+
                     break;
                 default:
                     break;
             }
 
-//            int rafaga = Integer.parseInt(txtProcesosInicio.getText());
-//            Nodo nuevo = new Nodo(tiempo, rafaga, 0);
-//
-//            Object p[] = {nuevo.getIdProceso(), tiempo, nuevo.getRafagaRestante()};
-//            modeloC.addRow(p);
-//
-//            cola2.insertarNodo(nuevo);
-//
-//            Object r[] = {};
-//            modeloG.addRow(r);
-//
-//            if (modeloSC.getRowCount() > 0) {
-//                if (cola2.getInicio().getRafagaRestante() < (int) modeloSC.getValueAt(0, 2)) {
-//
-//                    int idProceso = (int) modeloSC.getValueAt(0, 0);
-//                    int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
-//                    Nodo nuevo1 = new Nodo(idProceso, rafagaRestante);
-//                    Object q[] = {nuevo1.getIdProceso(), tiempo, nuevo1.getRafagaRestante()};
-//                    cola2.insertarNodo(nuevo1);
-//
-//                    actualizaC();
-//                    modeloSC.removeRow(0);
-//                    entraSC();
-//
-//                    modeloC.addRow(q);
-//
-//                }
-//            }
         } else if (e.getSource() == btnIniciar) {
             hilo.start();
             entraSC();
@@ -304,7 +276,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
         if (modelo1.getRowCount() > 0) {
             COLA = 1;
-
             if (tiempo == 0) {
                 modeloC.setValueAt(tiempo, cola1.getInicio().getIdProceso(), 3);
                 Object p[] = {cola1.getInicio().getIdProceso(), cola1.getInicio().getRafagaRestante(), cola1.getInicio().getRafagaRestante()};
@@ -312,10 +283,8 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 cola1.retirarNodo();
                 modelo1.removeRow(0);
             } else {
-
                 Object p[] = {cola1.getInicio().getIdProceso(), cola1.getInicio().getRafagaRestante(), cola1.getInicio().getRafagaRestante()};
                 modeloSC.addRow(p);
-
                 int indexFila = 0;
                 for (int i = 1; i < modeloC.getRowCount(); i++) {
                     if ((int) modeloSC.getValueAt(0, 0) == (int) modeloC.getValueAt(i, 0)) {
@@ -358,7 +327,29 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
         } else if (modelo3.getRowCount() > 0) {
             COLA = 3;
-            System.out.println("Entra la cola 2");
+
+            if (tiempo == 0) {
+                modeloC.setValueAt(tiempo, cola3.getInicio().getIdProceso(), 3);
+                Object p[] = {cola3.getInicio().getIdProceso(), cola3.getInicio().getRafagaRestante(), cola3.getInicio().getRafagaRestante()};
+                modeloSC.addRow(p);
+                cola3.retirarNodo();
+                modelo3.removeRow(0);
+            } else {
+                Object p[] = {cola3.getInicio().getIdProceso(), cola3.getInicio().getRafagaRestante(), cola3.getInicio().getRafagaRestante()};
+                modeloSC.addRow(p);
+                int indexFila = 0;
+                for (int i = 1; i < modeloC.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modeloC.getValueAt(i, 0)) {
+                        if (modeloC.getValueAt(i, 3) == null) {
+                            indexFila = i;
+                        }
+                    }
+                }
+                modeloC.setValueAt(tiempo, indexFila, 3);
+                cola3.retirarNodo();
+                modelo3.removeRow(0);
+
+            }
         }
     }
 
@@ -391,11 +382,19 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 actualizaC();
                 modeloSC.removeRow(0);
                 entraSC();
+                //modelo2.removeRow(0);
             } else {
                 modeloSC.setValueAt((int) modeloSC.getValueAt(0, 2) - 1, 0, 2);
             }
         } else if (COLA == 3) {
-
+            if ((int) modeloSC.getValueAt(0, 2) == 1) {
+                actualizaC();
+                modeloSC.removeRow(0);
+                entraSC();
+                //modelo2.removeRow(0);
+            } else {
+                modeloSC.setValueAt((int) modeloSC.getValueAt(0, 2) - 1, 0, 2);
+            }
         }
 
 //        if ((int) modeloSC.getValueAt(0, 2) == 1) {
