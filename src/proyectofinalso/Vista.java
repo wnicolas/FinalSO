@@ -202,17 +202,41 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             switch (cmbColas.getSelectedIndex()) {
                 case 0://ROUND ROBIN
                     cola1.insertarNodo(nuevo);
-
                     Object cola1[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante()};
                     modelo1.addRow(cola1);
-
                     break;
                 case 1://SHORTEST REMAINING TIME FIRST
-                    cola2.insertarNodo(nuevo);
+                    if (COLA != 2) {
+                        cola2.insertarNodo(nuevo);
+                        Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                        modelo2.addRow(cola2);
+                    } else {
+                        cola2.insertarNodo(nuevo);
 
-                    Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
-                    modelo2.addRow(cola2);
+                        if (modeloSC.getRowCount() > 0) {
+                            if (cola2.getInicio().getRafagaRestante() < (int) modeloSC.getValueAt(0, 2)) {
+                                System.out.println("Entra acá");
+                                int idProceso = (int) modeloSC.getValueAt(0, 0);
+                                int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
+                                Nodo nuevo1 = new Nodo(idProceso, rafagaRestante);
+                                Object q[] = {nuevo1.getIdProceso(), tiempo, nuevo1.getRafagaRestante()};
+                                cola2.insertarNodo(nuevo1);
 
+                                Object d[] = {nuevo1.getIdProceso(), nuevo1.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                                modelo2.addRow(d);
+
+                                actualizaC();
+                                modeloSC.removeRow(0);
+                                entraSC();
+
+                                modeloC.addRow(q);
+                            }
+                        } else {
+                            cola2.insertarNodo(nuevo);
+                            Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                            modelo2.addRow(cola2);
+                        }
+                    }
                     break;
                 case 2://LISTA DE PRIORIDADES
                     int prioridad = Integer.parseInt(txtPrioridad.getText());
@@ -286,6 +310,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 Object p[] = {cola1.getInicio().getIdProceso(), cola1.getInicio().getRafagaRestante(), cola1.getInicio().getRafagaRestante()};
                 modeloSC.addRow(p);
                 cola1.retirarNodo();
+                modelo1.removeRow(0);
             } else {
 
                 Object p[] = {cola1.getInicio().getIdProceso(), cola1.getInicio().getRafagaRestante(), cola1.getInicio().getRafagaRestante()};
@@ -301,10 +326,36 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 }
                 modeloC.setValueAt(tiempo, indexFila, 3);
                 cola1.retirarNodo();
+                modelo1.removeRow(0);
             }
         } else if (modelo2.getRowCount() > 0) {
             COLA = 2;
             System.out.println("Entra la cola 2");
+
+            if (tiempo == 0) {
+                modeloC.setValueAt(tiempo, cola2.getInicio().getIdProceso(), 3);
+                Object p[] = {cola2.getInicio().getIdProceso(), cola2.getInicio().getRafagaRestante(), cola2.getInicio().getRafagaRestante()};
+                modeloSC.addRow(p);
+                cola2.retirarNodo();
+                //modelo2.removeRow(0);
+            } else {
+
+                Object p[] = {cola2.getInicio().getIdProceso(), cola2.getInicio().getRafagaRestante(), cola2.getInicio().getRafagaRestante()};
+                modeloSC.addRow(p);
+
+                int indexFila = 0;
+                for (int i = 1; i < modeloC.getRowCount(); i++) {
+                    if ((int) modeloSC.getValueAt(0, 0) == (int) modeloC.getValueAt(i, 0)) {
+                        if (modeloC.getValueAt(i, 3) == null) {
+                            indexFila = i;
+                        }
+                    }
+                }
+                modeloC.setValueAt(tiempo, indexFila, 3);
+                cola2.retirarNodo();
+                //modelo2.removeRow(0);
+            }
+
         } else if (modelo3.getRowCount() > 0) {
             COLA = 3;
             System.out.println("Entra la cola 2");
@@ -327,7 +378,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                 Object cola1[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante()};
                 modelo1.addRow(cola1);
 
-                
                 actualizaC();
                 modeloSC.removeRow(0);
                 entraSC();
@@ -337,6 +387,13 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             }
         } else if (COLA == 2) {
 
+            if ((int) modeloSC.getValueAt(0, 2) == 1) {
+                actualizaC();
+                modeloSC.removeRow(0);
+                entraSC();
+            } else {
+                modeloSC.setValueAt((int) modeloSC.getValueAt(0, 2) - 1, 0, 2);
+            }
         } else if (COLA == 3) {
 
         }
