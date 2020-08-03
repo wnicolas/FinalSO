@@ -481,6 +481,45 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             modeloB.setValueAt((int) modeloB.getValueAt(0, 2) - 1, 0, 2);
         }
     }
+    
+    public void actualizaEnvejecimiento(){
+
+        for (int i = 0; i < modelo2.getRowCount(); i++) {
+            
+            if((int)modelo2.getValueAt(i, 2)==1){
+                Nodo cambio=cola2.getInicio();
+                cola2.retirarNodo();
+                cola1.insertarNodo(cambio);
+                Object p[]={cambio.getIdProceso(),cambio.getRafagaRestante()};
+                modelo1.addRow(p);
+            }
+            
+            modelo2.setValueAt((int)modelo2.getValueAt(i, 2)-1, i, 2);
+        }
+        
+        for (int i = 0; i < modelo3.getRowCount(); i++) {
+            
+             if((int)modelo3.getValueAt(i, 2)==1){
+                Nodo cambio=cola3.getInicio();
+                cola3.retirarNodo();
+                cola2.insertarNodo(cambio);
+                Object p[]={cambio.getIdProceso(),cambio.getRafagaRestante(),TIEMPOENVEJECIMIENTO};
+                modelo2.addRow(p);
+            }
+            
+            modelo3.setValueAt((int)modelo3.getValueAt(i, 2)-1, i, 2);
+        }
+
+        
+        while(modelo2.getRowCount()>0 && (int)modelo2.getValueAt(0, 2)<=0){
+            modelo2.removeRow(0);
+        }
+        while(modelo3.getRowCount()>0 && (int)modelo3.getValueAt(0, 2)<=0){
+            modelo3.removeRow(0);
+        }
+        
+        
+    }
 
     @Override
     public void run() {
@@ -492,6 +531,8 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            actualizaEnvejecimiento();
 
             actualizaSC();
             if (modeloB.getRowCount() > 0) {
