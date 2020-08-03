@@ -13,8 +13,10 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
     int tiempo = 0;
     final int CUANTUM = 5;
-    final int TIEMPOENVEJECIMIENTO = 10;
+    final int TIEMPOENVEJECIMIENTO = 20;
+    final int TIEMPOBLOQUEO=3;
     int COLA = 0;
+    
 
     Cola1 cola1;
     Cola2 cola2;
@@ -118,7 +120,8 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         modeloB = new DefaultTableModel();
         modeloB.addColumn("Proceso");
         modeloB.addColumn("Ráfaga");
-        modeloB.addColumn("Restante C.B");
+        modeloB.addColumn("T. Restante");
+        modeloB.addColumn("Cola");
 
         modelo1 = new DefaultTableModel();
         modelo1.addColumn("Proceso");
@@ -231,7 +234,6 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                                 modeloC.addRow(q);
                             }
                         } else {
-                            cola2.insertarNodo(nuevo);
                             Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
                             modelo2.addRow(cola2);
                         }
@@ -253,22 +255,10 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         } else if (e.getSource() == btnIniciar) {
             hilo.start();
             entraSC();
+            btnIniciar.setEnabled(false);
         } else if (e.getSource() == btnBloquear) {
             bloquear();
         }
-
-    }
-
-    public void bloquear() {
-        int idProceso = (int) modeloSC.getValueAt(0, 0);
-        int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
-        //Nodo nuevo = new Nodo(idProceso, rafagaRestante);
-        Object p[] = {idProceso, rafagaRestante, 5};
-        modeloB.addRow(p);
-
-        actualizaC();
-        modeloSC.removeRow(0);
-        entraSC();
 
     }
 
@@ -457,6 +447,17 @@ public class Vista extends JFrame implements ActionListener, Runnable {
 
     }
 
+    public void bloquear() {
+        int idProceso = (int) modeloSC.getValueAt(0, 0);
+        int rafagaRestante = (int) modeloSC.getValueAt(0, 2);
+        Object p[] = {idProceso, rafagaRestante, TIEMPOBLOQUEO, COLA};
+        modeloB.addRow(p);
+        actualizaC();
+        modeloSC.removeRow(0);
+        entraSC();
+
+    }
+
     public void actualizaB() {
         if ((int) modeloB.getValueAt(0, 2) == 1) {
             int idProceso = (int) modeloB.getValueAt(0, 0);
@@ -466,11 +467,28 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             Object p[] = {nuevo.getIdProceso(), tiempo, nuevo.getRafagaRestante()};
             modeloC.addRow(p);
 
-            cola2.insertarNodo(nuevo);
+            switch ((int) modeloB.getValueAt(0, 3)) {
+                case 1:
+                    cola1.insertarNodo(nuevo);
+                    Object cola1[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante()};
+                    modelo1.addRow(cola1);
+                    break;
+                case 2:
+                    cola2.insertarNodo(nuevo);
+                    Object cola2[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(),TIEMPOENVEJECIMIENTO};
+                    modelo2.addRow(cola2);
+                    break;
+                case 3:
+                    cola3.insertarNodo(nuevo);
+                    Object cola3[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(),TIEMPOENVEJECIMIENTO};
+                    modelo3.addRow(cola3);
+                    break;
+                default:
+                    break;
+            }
 
             for (int i = tiempo - 5; i < tiempo; i++) {
                 if (modeloG.getValueAt(idProceso, i) == null) {
-
                     modeloG.setValueAt("B", idProceso, i);
                 }
             }
@@ -481,44 +499,42 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             modeloB.setValueAt((int) modeloB.getValueAt(0, 2) - 1, 0, 2);
         }
     }
-    
-    public void actualizaEnvejecimiento(){
+
+    public void actualizaEnvejecimiento() {
 
         for (int i = 0; i < modelo2.getRowCount(); i++) {
-            
-            if((int)modelo2.getValueAt(i, 2)==1){
-                Nodo cambio=cola2.getInicio();
+
+            if ((int) modelo2.getValueAt(i, 2) == 1) {
+                Nodo cambio = cola2.getInicio();
                 cola2.retirarNodo();
                 cola1.insertarNodo(cambio);
-                Object p[]={cambio.getIdProceso(),cambio.getRafagaRestante()};
+                Object p[] = {cambio.getIdProceso(), cambio.getRafagaRestante()};
                 modelo1.addRow(p);
             }
-            
-            modelo2.setValueAt((int)modelo2.getValueAt(i, 2)-1, i, 2);
-        }
-        
-        for (int i = 0; i < modelo3.getRowCount(); i++) {
-            
-             if((int)modelo3.getValueAt(i, 2)==1){
-                Nodo cambio=cola3.getInicio();
-                cola3.retirarNodo();
-                cola2.insertarNodo(cambio);
-                Object p[]={cambio.getIdProceso(),cambio.getRafagaRestante(),TIEMPOENVEJECIMIENTO};
-                modelo2.addRow(p);
-            }
-            
-            modelo3.setValueAt((int)modelo3.getValueAt(i, 2)-1, i, 2);
+
+            modelo2.setValueAt((int) modelo2.getValueAt(i, 2) - 1, i, 2);
         }
 
-        
-        while(modelo2.getRowCount()>0 && (int)modelo2.getValueAt(0, 2)<=0){
+        for (int i = 0; i < modelo3.getRowCount(); i++) {
+
+            if ((int) modelo3.getValueAt(i, 2) == 1) {
+                Nodo cambio = cola3.getInicio();
+                cola3.retirarNodo();
+                cola2.insertarNodo(cambio);
+                Object p[] = {cambio.getIdProceso(), cambio.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                modelo2.addRow(p);
+            }
+
+            modelo3.setValueAt((int) modelo3.getValueAt(i, 2) - 1, i, 2);
+        }
+
+        while (modelo2.getRowCount() > 0 && (int) modelo2.getValueAt(0, 2) <= 0) {
             modelo2.removeRow(0);
         }
-        while(modelo3.getRowCount()>0 && (int)modelo3.getValueAt(0, 2)<=0){
+        while (modelo3.getRowCount() > 0 && (int) modelo3.getValueAt(0, 2) <= 0) {
             modelo3.removeRow(0);
         }
-        
-        
+
     }
 
     @Override
@@ -531,7 +547,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             actualizaEnvejecimiento();
 
             actualizaSC();
