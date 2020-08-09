@@ -135,6 +135,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         modelo3.addColumn("Proceso");
         modelo3.addColumn("Ráfaga");
         modelo3.addColumn("T.E");
+        modelo3.addColumn("Prioridad");
 
         modeloG = new DefaultTableModel();
         Object q[] = {};
@@ -183,7 +184,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         lbl3.setBounds(1115, 75, 150, 20);
 
         panelCentral.add(scroll3);
-        scroll3.setBounds(1115, 95, 190, 155);
+        scroll3.setBounds(1115, 95, 225, 155);
 
         hilo = new Thread(this);
     }
@@ -243,7 +244,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
                     nuevo.setPrioridad(prioridad);
                     cola3.insertarNodo(nuevo);
 
-                    Object cola3[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO};
+                    Object cola3[] = {nuevo.getIdProceso(), nuevo.getRafagaRestante(), TIEMPOENVEJECIMIENTO, nuevo.getPrioridad()};
                     modelo3.addRow(cola3);
 
                     break;
