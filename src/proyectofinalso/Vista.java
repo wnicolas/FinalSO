@@ -148,7 +148,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
         JTable tablaC = new JTable(modeloC);
         JTable tablaL = new JTable(modeloSC);
         JTable tablaB = new JTable(modeloB);
-        JTable tablaG = new JTable(modeloG);
+        Gantt tablaG = new Gantt(modeloG);
         JTable tabla1 = new JTable(modelo1);
         JTable tabla2 = new JTable(modelo2);
         JTable tabla3 = new JTable(modelo3);
@@ -576,7 +576,7 @@ public class Vista extends JFrame implements ActionListener, Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
                 tiempo++;
                 lblTiempo.setText("tiempo: " + tiempo);
             } catch (InterruptedException ex) {
